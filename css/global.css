@@ -1,0 +1,28 @@
+/* .loginSection {
+  border: pink solid;
+}
+.dashboardSection {
+  border: green solid;
+} */
+.supportedCoins {
+  margin-left: 15px;
+}
+.section1 {
+  display: none;
+}
+.section2 {
+  display: none;
+}
+.section3 {
+  display: none;
+}
+.section4 {
+  display: none;
+}
+.dashboardSection {
+  display: none;
+}
+.thead{
+    background-color: #283a5e;
+    color: white;
+}
