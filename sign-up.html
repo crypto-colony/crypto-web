@@ -28,6 +28,7 @@
     <style>
       button:disabled {
         cursor: not-allowed;
+        opacity: 0.5;
       }
     </style>
   </head>
@@ -864,10 +865,9 @@
         // TODO check if user id already exists
         // snapshot (hangout url)
         // TODO referral something something
-        var newUserName = false;
-        newUserName = await handleUserNameAvailibility();
-        if (newUserName && USER_NAME) {
-          console.log("sum1", newUserName, USER_NAME);
+        // var newUserName = false;
+        // newUserName = await handleUserNameAvailibility();
+        if (USER_NAME) {
           try {
             await firebase
               .database()
@@ -885,7 +885,8 @@
                 // userName: `${userName[0].value} ${names[1].value}`, // doubt
               })
               .then(() => {
-                console.log("success2");
+                console.log("success2 real1");
+                window.location.href = "login.html";
               });
           } catch (error) {
             alert("err::" + error);
@@ -899,11 +900,9 @@
           console.log("sum2", newUserName);
           // return false;
         }
-        console.log("anshu", referByCode);
 
         if (referByCode && referByCode[0] && referByCode[0].value) {
           REFERAL_MATCH = false;
-          console.log("anshu2", REFERAL_MATCH);
           try {
             var userNameDB = firebase.database().ref("users");
             userNameDB.on("value", function (snapshot) {
@@ -918,49 +917,6 @@
                 if (referalData.referalCode === referByCode[0].value) {
                   console.log("2");
 
-            if (!names[0].value.trim().length || !passwords[0].value.trim().length || !userName[0].value.trim().length) {
-                alert("Please fill the form");
-                return false;
-            } else if (!chb1.checked || !chb2.checked) {
-                alert("Please accept the privacy policy and tems of service");
-                return false;
-            } else if (passwords[0].value !== passwords[1].value) {
-                alert("Passwords do not match");
-                return false;
-            }
-            var referralCode = getRandomInt(names[0].value[0], names[0].value[1]);
-            // TODO check if user id already exists
-            // snapshot (hangout url)
-            // TODO referral something something
-            var newUserName = await handleUserNameAvailibility();
-            if (newUserName) {
-                try {
-                    firebase
-                        .database()
-                        .ref("users/" + USER_NAME)
-                        .set({
-                            name: `${names[0].value} ${names[1].value}`,
-                            email: `${email[0].value}`,
-                            password: `${passwords[0].value}`,
-                            referalCode: referralCode,
-                            referredPeople: 0,
-                            referByCode: referByCode[0].value || "",
-                            referByName: "",
-                            userName: userName[0].value,
-                            txnIds: [],
-                            // userName: `${userName[0].value} ${names[1].value}`, // doubt
-                        }).then(e=>{
-                          console.log("e",e);
-                          document.getElementById("register").href = "login.html";
-                        });
-                } catch (error) {
-                    alert(error);
-                }
-                // or window.location.href = "contact-form.html";
-                // ----dont use / before
-                // document.getElementById("register").href = "/login.html";
-                // window.location.pathname = '/login.html';
-            }
                   REFERAL_MATCH = true;
                   referObj = referalData;
                   //  await updateReferedUser(referalData);
@@ -992,17 +948,15 @@
         var flag = false;
         var userExistFlag = false;
         var userNameTest = document.getElementsByName("userName");
-        if (userNameTest[0].value.length === 6) {
+        if (userNameTest[0].value.length > 5) {
           try {
             console.log("smmmm12");
             var userNameDB = await firebase.database().ref("users");
             await userNameDB.on(
               "value",
               await async function (snapshot) {
-                console.log("smmmm13", userNameTest[0].value);
                 snapshot.forEach(async function (childSnapshot) {
                   var childData = childSnapshot.val();
-                  console.log("smmmm14", childData);
                   console.log(
                     "username",
                     childData,
@@ -1021,7 +975,7 @@
             return false;
           }
         } else {
-          alert("User Name must be 6 character long");
+          alert("User Name must be atleast 6 character long");
           return false;
         }
         if (flag && userExistFlag) {
@@ -1029,12 +983,10 @@
           return false;
         } else if (flag) {
           USER_NAME = userNameTest[0].value;
-          console.log("smmmm15");
           document.getElementById("sign-up-btn").disabled = false;
           document.getElementById("verify-username-btn").disabled = true;
           return true;
         }
-        console.log("smmmm16");
       }
     </script>
   </body>
